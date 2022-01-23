@@ -24,4 +24,8 @@ interface DespesaApi {
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     fun excluir(@PathVariable id: Long)
+
+    @PutMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    fun atualizar(@PathVariable id: Long, @RequestBody request: NovaDespesaRequest)
 }
