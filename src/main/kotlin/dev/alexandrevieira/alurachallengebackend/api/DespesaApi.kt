@@ -1,15 +1,22 @@
 package dev.alexandrevieira.alurachallengebackend.api
 
 import dev.alexandrevieira.alurachallengebackend.api.dto.request.NovaDespesaRequest
+import dev.alexandrevieira.alurachallengebackend.api.dto.response.DespesaResponse
 import io.swagger.annotations.Api
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.*
 
 @RequestMapping("/despesas")
 @Api(value = "despesa-api", tags = ["Despesas API"], description = "Responsável pelo gerenciamento de despesas")
 interface DespesaApi {
     @PostMapping
     fun cadastrar(@RequestBody request: NovaDespesaRequest): ResponseEntity<Unit>
+
+    @GetMapping
+    fun listar(pageable: Pageable): Page<DespesaResponse>
+
+    @GetMapping("/{id}")
+    fun detalhar(@PathVariable id: Long): DespesaResponse
 }
