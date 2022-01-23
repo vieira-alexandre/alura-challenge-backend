@@ -8,12 +8,13 @@ import org.springframework.data.domain.Pageable
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
+import javax.validation.Valid
 
 @RequestMapping("/despesas")
 @Api(value = "despesa-api", tags = ["Despesas API"], description = "Responsável pelo gerenciamento de despesas")
 interface DespesaApi {
     @PostMapping
-    fun cadastrar(@RequestBody request: NovaDespesaRequest): ResponseEntity<Unit>
+    fun cadastrar(@RequestBody @Valid request: NovaDespesaRequest): ResponseEntity<Unit>
 
     @GetMapping
     fun listar(pageable: Pageable): Page<DespesaResponse>
@@ -27,5 +28,5 @@ interface DespesaApi {
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    fun atualizar(@PathVariable id: Long, @RequestBody request: NovaDespesaRequest)
+    fun atualizar(@PathVariable id: Long, @RequestBody @Valid request: NovaDespesaRequest)
 }
