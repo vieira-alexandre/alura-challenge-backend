@@ -5,6 +5,7 @@ import dev.alexandrevieira.alurachallengebackend.api.dto.response.ReceitaRespons
 import io.swagger.annotations.Api
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
+import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
@@ -20,4 +21,12 @@ interface ReceitaApi {
 
     @GetMapping("/{id}")
     fun detalhar(@PathVariable id: Long): ReceitaResponse
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    fun excluir(@PathVariable id: Long)
+
+    @PutMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    fun atualizar(@PathVariable id: Long, @RequestBody request: NovaReceitaRequest)
 }

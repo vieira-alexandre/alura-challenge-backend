@@ -6,11 +6,13 @@ import dev.alexandrevieira.alurachallengebackend.api.dto.response.ReceitaRespons
 import dev.alexandrevieira.alurachallengebackend.exception.NotFoundException
 import dev.alexandrevieira.alurachallengebackend.model.entities.Receita
 import dev.alexandrevieira.alurachallengebackend.model.repositories.ReceitaRepository
+import org.springframework.beans.BeanUtils
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder
+import java.util.*
 
 @RestController
 class ReceitaController(
@@ -32,5 +34,18 @@ class ReceitaController(
         val receitaOptional = repository.findById(id)
         if (receitaOptional.isEmpty) throw NotFoundException(Receita::class)
         return ReceitaResponse.of(receitaOptional.get())
+    }
+
+    override fun excluir(id: Long) {
+        if (repository.existsById(id)) repository.deleteById(id)
+        else throw NotFoundException(Receita::class)
+    }
+
+    override fun atualizar(id: Long, request: NovaReceitaRequest) {
+        val receitaOptional: Optional<Receita> = repository.findById(id)
+        if (receitaOptional.isEmpty) throw NotFoundException(Receita::class)
+        val carregada: Receita = receitaOptional.get()
+        BeanUtils.copyProperties(request, carregada, "id")
+        repository.save(carregada)
     }
 }
