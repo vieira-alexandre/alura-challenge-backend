@@ -6,6 +6,7 @@ import dev.alexandrevieira.alurachallengebackend.api.dto.response.DespesaRespons
 import dev.alexandrevieira.alurachallengebackend.exception.NotFoundException
 import dev.alexandrevieira.alurachallengebackend.model.entities.Despesa
 import dev.alexandrevieira.alurachallengebackend.model.repositories.DespesaRepository
+import org.springframework.beans.BeanUtils
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.http.ResponseEntity
@@ -33,5 +34,18 @@ class DespesaController(
         val despesaOptional: Optional<Despesa> = repository.findById(id)
         if (despesaOptional.isEmpty) throw NotFoundException(Despesa::class)
         return DespesaResponse.of(despesaOptional.get())
+    }
+
+    override fun excluir(id: Long) {
+        if (repository.existsById(id)) repository.deleteById(id)
+        else throw NotFoundException(Despesa::class)
+    }
+
+    override fun atualizar(id: Long, request: NovaDespesaRequest) {
+        val despesaOptional: Optional<Despesa> = repository.findById(id)
+        if (despesaOptional.isEmpty) throw NotFoundException(Despesa::class)
+        val carregada: Despesa = despesaOptional.get()
+        BeanUtils.copyProperties(request, carregada, "id")
+        repository.save(carregada)
     }
 }

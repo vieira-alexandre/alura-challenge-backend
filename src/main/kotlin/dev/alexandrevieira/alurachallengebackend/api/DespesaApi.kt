@@ -5,18 +5,28 @@ import dev.alexandrevieira.alurachallengebackend.api.dto.response.DespesaRespons
 import io.swagger.annotations.Api
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
+import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
+import javax.validation.Valid
 
 @RequestMapping("/despesas")
 @Api(value = "despesa-api", tags = ["Despesas API"], description = "Responsável pelo gerenciamento de despesas")
 interface DespesaApi {
     @PostMapping
-    fun cadastrar(@RequestBody request: NovaDespesaRequest): ResponseEntity<Unit>
+    fun cadastrar(@RequestBody @Valid request: NovaDespesaRequest): ResponseEntity<Unit>
 
     @GetMapping
     fun listar(pageable: Pageable): Page<DespesaResponse>
 
     @GetMapping("/{id}")
     fun detalhar(@PathVariable id: Long): DespesaResponse
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    fun excluir(@PathVariable id: Long)
+
+    @PutMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    fun atualizar(@PathVariable id: Long, @RequestBody @Valid request: NovaDespesaRequest)
 }
