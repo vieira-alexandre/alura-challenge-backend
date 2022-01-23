@@ -5,6 +5,7 @@ import dev.alexandrevieira.alurachallengebackend.api.dto.response.DespesaRespons
 import io.swagger.annotations.Api
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
+import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
@@ -19,4 +20,8 @@ interface DespesaApi {
 
     @GetMapping("/{id}")
     fun detalhar(@PathVariable id: Long): DespesaResponse
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    fun excluir(@PathVariable id: Long)
 }

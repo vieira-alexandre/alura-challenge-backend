@@ -34,4 +34,9 @@ class DespesaController(
         if (despesaOptional.isEmpty) throw NotFoundException(Despesa::class)
         return DespesaResponse.of(despesaOptional.get())
     }
+
+    override fun excluir(id: Long) {
+        if (repository.existsById(id)) repository.deleteById(id)
+        else throw NotFoundException(Despesa::class)
+    }
 }
