@@ -1,0 +1,21 @@
+﻿version: '3'
+services:
+
+  postgres:
+    image: 'postgres:9.6-alpine'
+    #    volumes:
+    #      - postgres-volume:/var/lib/postgresql/data
+    ports:
+      - "5433:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: change-me
+      POSTGRES_DB: alura-challenge
+
+#volumes:
+#  postgres-volume:
+#
+#
+#networks:
+#  default:
+#    name: minha-rede
