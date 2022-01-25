@@ -1,6 +1,7 @@
 package dev.alexandrevieira.alurachallengebackend.model.entities
 
 import dev.alexandrevieira.alurachallengebackend.model.converters.YearMonthDateAttributeConverter
+import dev.alexandrevieira.alurachallengebackend.model.enums.Categoria
 import java.math.BigDecimal
 import java.time.YearMonth
 import javax.persistence.*
@@ -20,6 +21,9 @@ class Despesa(
     @Column(nullable = false, columnDefinition = "date")
     @Convert(converter = YearMonthDateAttributeConverter::class)
     var mes: YearMonth,
+    @Column(nullable = false)
+    @Enumerated(value = EnumType.STRING)
+    var categoria: Categoria,
 ) {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
