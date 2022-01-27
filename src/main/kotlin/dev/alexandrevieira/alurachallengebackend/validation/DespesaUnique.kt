@@ -10,7 +10,7 @@ import kotlin.reflect.KClass
 
 @Constraint(validatedBy = [DespesaUniqueValidator::class])
 @Retention(AnnotationRetention.RUNTIME)
-@Target(AnnotationTarget.CLASS)
+@Target(AnnotationTarget.CLASS, AnnotationTarget.VALUE_PARAMETER)
 annotation class DespesaUnique(
     val message: String = "Despesa já cadastrada para o mês informado",
     val groups: Array<KClass<Any>> = [],
