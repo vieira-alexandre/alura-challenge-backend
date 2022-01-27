@@ -22,19 +22,15 @@ class GlobalExceptionHandler {
     private val messageSource: MessageSource? = null
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(
-        MethodArgumentNotValidException::class
-    )
+    @ExceptionHandler(MethodArgumentNotValidException::class)
     fun handleMethodArgumentNotValidException(ex: MethodArgumentNotValidException): ErrorsOutputDto {
         val globalErrors = ex.bindingResult.globalErrors
         val fieldErrors = ex.bindingResult.fieldErrors
-        return buildValidationErrors(HttpStatus.BAD_REQUEST, globalErrors, fieldErrors)
+        return buildValidationErrors(globalErrors, fieldErrors)
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(
-        MissingRequestHeaderException::class
-    )
+    @ExceptionHandler(MissingRequestHeaderException::class)
     fun handleMissingRequestHeaderException(ex: MissingRequestHeaderException): ErrorsOutputDto {
         val error = ErrorsOutputDto(HttpStatus.BAD_REQUEST)
         error.addFieldError(ex.headerName, "Header is required")
@@ -46,7 +42,7 @@ class GlobalExceptionHandler {
     fun handleBindException(ex: BindException): ErrorsOutputDto {
         val globalErrors = ex.bindingResult.globalErrors
         val fieldErrors = ex.bindingResult.fieldErrors
-        return buildValidationErrors(HttpStatus.BAD_REQUEST, globalErrors, fieldErrors)
+        return buildValidationErrors(globalErrors, fieldErrors)
     }
 
     @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
@@ -57,16 +53,15 @@ class GlobalExceptionHandler {
 
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler(NotFoundException::class)
-    fun handleUnprocessableEntityException(ex: NotFoundException): ErrorsOutputDto {
+    fun handleNotFoundException(ex: NotFoundException): ErrorsOutputDto {
         return ErrorsOutputDto(HttpStatus.NOT_FOUND, ex.localizedMessage)
     }
 
     private fun buildValidationErrors(
-        httpStatus: HttpStatus,
         globalErrors: List<ObjectError>,
         fieldErrors: List<FieldError>,
     ): ErrorsOutputDto {
-        val validationErrors = ErrorsOutputDto(httpStatus)
+        val validationErrors = ErrorsOutputDto(HttpStatus.BAD_REQUEST)
         globalErrors.forEach(Consumer { error: ObjectError ->
             validationErrors.addError(
                 getErrorMessage(error)
