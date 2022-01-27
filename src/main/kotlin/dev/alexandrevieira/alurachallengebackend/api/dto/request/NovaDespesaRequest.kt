@@ -1,6 +1,7 @@
 package dev.alexandrevieira.alurachallengebackend.api.dto.request
 
 import dev.alexandrevieira.alurachallengebackend.model.entities.Despesa
+import dev.alexandrevieira.alurachallengebackend.model.enums.Categoria
 import dev.alexandrevieira.alurachallengebackend.validation.DespesaUnique
 import java.math.BigDecimal
 import java.time.YearMonth
@@ -19,8 +20,11 @@ data class NovaDespesaRequest(
 
     @field:NotNull
     val mes: YearMonth,
-) {
+
+    val categoria: Categoria?,
+
+    ) {
     fun toModel(): Despesa {
-        return Despesa(descricao = descricao, valor = valor, mes = mes)
+        return Despesa(descricao = descricao, valor = valor, mes = mes, categoria = categoria ?: Categoria.OUTRAS)
     }
 }

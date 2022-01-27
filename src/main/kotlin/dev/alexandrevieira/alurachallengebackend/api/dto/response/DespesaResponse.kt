@@ -10,11 +10,18 @@ data class DespesaResponse(
     val descricao: String,
     val valor: BigDecimal,
     val mes: YearMonth,
+    val categoria: String,
 ) {
     companion object {
         fun of(despesa: Despesa): DespesaResponse {
             Assert.state(despesa.id != null, "Estado inválido: id não deve ser nulo")
-            return DespesaResponse(despesa.id!!, despesa.descricao, despesa.valor, despesa.mes)
+            return DespesaResponse(
+                id = despesa.id!!,
+                descricao = despesa.descricao,
+                valor = despesa.valor,
+                mes = despesa.mes,
+                categoria = despesa.categoria.name
+            )
         }
     }
 }
