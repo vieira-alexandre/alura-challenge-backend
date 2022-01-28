@@ -23,7 +23,10 @@ class ReceitaController(
         return ResponseEntity.created(uri).build()
     }
 
-    override fun listar(pageable: Pageable): Page<ReceitaResponse> {
+    override fun listar(pageable: Pageable, descricao: String?): Page<ReceitaResponse> {
+        if (!descricao.isNullOrBlank())
+            return service.listarContendo(pageable, descricao).map { ReceitaResponse.of(it) }
+        
         return service.listar(pageable).map { ReceitaResponse.of(it) }
     }
 

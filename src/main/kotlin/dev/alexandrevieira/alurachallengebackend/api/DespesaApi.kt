@@ -20,7 +20,7 @@ interface DespesaApi {
     fun cadastrar(@RequestBody @Valid @DespesaUnique request: NovaDespesaRequest): ResponseEntity<Unit>
 
     @GetMapping
-    fun listar(pageable: Pageable): Page<DespesaResponse>
+    fun listar(pageable: Pageable, @RequestParam descricao: String?): Page<DespesaResponse>
 
     @GetMapping("/{id}")
     fun detalhar(@PathVariable id: Long): DespesaResponse
