@@ -47,4 +47,8 @@ class ReceitaService(
     private fun estaAlterando(receita1: Receita, receita2: Receita): Boolean {
         return receita1.mes != receita2.mes || receita1.descricao != receita2.descricao
     }
+
+    fun listarContendo(pageable: Pageable, descricao: String): Page<Receita> {
+        return repository.findByDescricaoContainingIgnoreCase(pageable, descricao)
+    }
 }

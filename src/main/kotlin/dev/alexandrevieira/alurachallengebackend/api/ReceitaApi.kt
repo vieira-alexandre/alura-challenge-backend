@@ -21,7 +21,7 @@ interface ReceitaApi {
     fun cadastrar(@RequestBody @Valid @ReceitaUnique request: NovaReceitaRequest): ResponseEntity<Unit>
 
     @GetMapping
-    fun listar(pageable: Pageable): Page<ReceitaResponse>
+    fun listar(pageable: Pageable, @RequestParam descricao: String?): Page<ReceitaResponse>
 
     @GetMapping("/{id}")
     fun detalhar(@PathVariable id: Long): ReceitaResponse
