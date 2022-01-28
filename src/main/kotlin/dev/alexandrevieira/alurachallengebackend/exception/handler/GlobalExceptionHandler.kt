@@ -1,5 +1,6 @@
 package dev.alexandrevieira.alurachallengebackend.exception.handler
 
+import dev.alexandrevieira.alurachallengebackend.exception.BadRequestException
 import dev.alexandrevieira.alurachallengebackend.exception.NotFoundException
 import dev.alexandrevieira.alurachallengebackend.exception.UnprocessableEntityException
 import org.springframework.beans.factory.annotation.Autowired
@@ -44,6 +45,12 @@ class GlobalExceptionHandler {
         val globalErrors = ex.bindingResult.globalErrors
         val fieldErrors = ex.bindingResult.fieldErrors
         return buildValidationErrors(globalErrors, fieldErrors)
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(BadRequestException::class)
+    fun handleBadRequestException(ex: BadRequestException): ErrorsOutputDto {
+        return ErrorsOutputDto(HttpStatus.BAD_REQUEST, ex.localizedMessage)
     }
 
     @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)

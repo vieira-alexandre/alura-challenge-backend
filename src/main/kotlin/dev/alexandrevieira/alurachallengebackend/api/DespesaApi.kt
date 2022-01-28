@@ -30,7 +30,7 @@ interface DespesaApi {
     @GetMapping("/{ano}/{mes}")
     fun listarPorMes(
         pageable: Pageable,
-        @PathVariable @Min(2022) ano: Int,
+        @PathVariable @Min(2022) @Max(2100) ano: Int,
         @PathVariable @Min(1) @Max(12) mes: Int,
     ): Page<DespesaResponse>
 
