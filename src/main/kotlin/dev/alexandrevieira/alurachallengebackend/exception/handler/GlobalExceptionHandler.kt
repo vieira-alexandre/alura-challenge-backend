@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.annotation.RestControllerAdvice
 import java.util.function.Consumer
+import javax.validation.ConstraintViolationException
 
 @RestControllerAdvice
 class GlobalExceptionHandler {
@@ -49,6 +50,18 @@ class GlobalExceptionHandler {
     @ExceptionHandler(UnprocessableEntityException::class)
     fun handleUnprocessableEntityException(ex: UnprocessableEntityException): ErrorsOutputDto {
         return ErrorsOutputDto(HttpStatus.UNPROCESSABLE_ENTITY, ex.localizedMessage)
+    }
+
+    @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
+    @ExceptionHandler(ConstraintViolationException::class)
+    fun handleConstraintViolationException(ex: ConstraintViolationException): ErrorsOutputDto {
+        return ErrorsOutputDto(HttpStatus.UNPROCESSABLE_ENTITY).let { it ->
+            ex.constraintViolations.forEach { violation ->
+                it.addError(violation.message)
+            }
+
+            it
+        }
     }
 
     @ResponseStatus(HttpStatus.NOT_FOUND)

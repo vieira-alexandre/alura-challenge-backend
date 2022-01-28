@@ -3,49 +3,40 @@ package dev.alexandrevieira.alurachallengebackend.api.controllers
 import dev.alexandrevieira.alurachallengebackend.api.ReceitaApi
 import dev.alexandrevieira.alurachallengebackend.api.dto.request.NovaReceitaRequest
 import dev.alexandrevieira.alurachallengebackend.api.dto.response.ReceitaResponse
-import dev.alexandrevieira.alurachallengebackend.exception.NotFoundException
 import dev.alexandrevieira.alurachallengebackend.model.entities.Receita
-import dev.alexandrevieira.alurachallengebackend.model.repositories.ReceitaRepository
-import org.springframework.beans.BeanUtils
+import dev.alexandrevieira.alurachallengebackend.service.ReceitaService
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder
-import java.util.*
 
 @RestController
 class ReceitaController(
-    val repository: ReceitaRepository,
+    val service: ReceitaService,
 ) : ReceitaApi {
 
     override fun cadastrar(request: NovaReceitaRequest): ResponseEntity<Unit> {
-        val receita: Receita = request.toModel()
-        repository.save(receita)
+        var receita: Receita = request.toModel()
+        receita = service.cadastrar(receita)
         val uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(receita.id).toUri()
         return ResponseEntity.created(uri).build()
     }
 
     override fun listar(pageable: Pageable): Page<ReceitaResponse> {
-        return repository.findAll(pageable).map { ReceitaResponse.of(it) }
+        return service.listar(pageable).map { ReceitaResponse.of(it) }
     }
 
     override fun detalhar(id: Long): ReceitaResponse {
-        val receitaOptional = repository.findById(id)
-        if (receitaOptional.isEmpty) throw NotFoundException(Receita::class)
-        return ReceitaResponse.of(receitaOptional.get())
+        val receita: Receita = service.detalhar(id)
+        return ReceitaResponse.of(receita)
     }
 
     override fun excluir(id: Long) {
-        if (repository.existsById(id)) repository.deleteById(id)
-        else throw NotFoundException(Receita::class)
+        service.excluir(id)
     }
 
     override fun atualizar(id: Long, request: NovaReceitaRequest) {
-        val receitaOptional: Optional<Receita> = repository.findById(id)
-        if (receitaOptional.isEmpty) throw NotFoundException(Receita::class)
-        val carregada: Receita = receitaOptional.get()
-        BeanUtils.copyProperties(request, carregada, "id")
-        repository.save(carregada)
+        service.atualizar(id, request.toModel())
     }
 }
