@@ -37,14 +37,14 @@ class DespesaService(
         if (despesaOptional.isEmpty) throw NotFoundException(Despesa::class)
         val carregada: Despesa = despesaOptional.get()
 
-        if (estaMudando(carregada, request) && repository.existsByDescricaoAndMes(request.descricao, request.mes))
+        if (estaAlterando(carregada, request) && repository.existsByDescricaoAndMes(request.descricao, request.mes))
             throw UnprocessableEntityException(Mensagens.despesaJaCadastrada)
 
         BeanUtils.copyProperties(request, despesaOptional.get(), "id")
         repository.save(despesaOptional.get())
     }
 
-    private fun estaMudando(despesa1: Despesa, despesa2: Despesa): Boolean {
+    private fun estaAlterando(despesa1: Despesa, despesa2: Despesa): Boolean {
         return despesa1.mes != despesa2.mes || despesa1.descricao != despesa2.descricao
     }
 }
