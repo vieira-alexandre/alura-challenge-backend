@@ -9,6 +9,7 @@ import org.springframework.beans.BeanUtils
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
+import java.time.YearMonth
 import java.util.*
 
 @Service
@@ -25,6 +26,10 @@ class DespesaService(
 
     fun detalhar(id: Long): Despesa {
         return repository.findById(id).orElseThrow { throw NotFoundException(Despesa::class) }
+    }
+
+    fun listarPorMes(pageable: Pageable, mes: YearMonth): Page<Despesa> {
+        return repository.findByMes(pageable, mes)
     }
 
     fun excluir(id: Long) {
