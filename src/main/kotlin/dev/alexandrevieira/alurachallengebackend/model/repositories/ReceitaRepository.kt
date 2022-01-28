@@ -12,4 +12,6 @@ interface ReceitaRepository : JpaRepository<Receita, Long> {
     fun existsByDescricaoAndMes(descricao: String, mes: YearMonth): Boolean
 
     fun findByDescricaoContainingIgnoreCase(pageable: Pageable, descricao: String): Page<Receita>
+
+    fun findByMes(pageable: Pageable, mes: YearMonth): Page<Receita>
 }
