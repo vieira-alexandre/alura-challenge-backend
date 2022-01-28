@@ -47,4 +47,8 @@ class DespesaService(
     private fun estaAlterando(despesa1: Despesa, despesa2: Despesa): Boolean {
         return despesa1.mes != despesa2.mes || despesa1.descricao != despesa2.descricao
     }
+
+    fun listarContendo(pageable: Pageable, descricao: String): Page<Despesa> {
+        return repository.findByDescricaoContainingIgnoreCase(pageable, descricao)
+    }
 }

@@ -8,6 +8,7 @@ import dev.alexandrevieira.alurachallengebackend.service.DespesaService
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder
 
@@ -23,7 +24,10 @@ class DespesaController(
         return ResponseEntity.created(uri).build()
     }
 
-    override fun listar(pageable: Pageable): Page<DespesaResponse> {
+    override fun listar(pageable: Pageable, @RequestParam descricao: String?): Page<DespesaResponse> {
+        if (!descricao.isNullOrBlank())
+            return service.listarContendo(pageable, descricao).map { DespesaResponse.of(it) }
+
         return service.listar(pageable).map { DespesaResponse.of(it) }
     }
 
