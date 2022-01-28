@@ -11,6 +11,8 @@ import org.springframework.http.ResponseEntity
 import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.*
 import javax.validation.Valid
+import javax.validation.constraints.Max
+import javax.validation.constraints.Min
 
 @RequestMapping("/receitas")
 @Validated
@@ -25,6 +27,13 @@ interface ReceitaApi {
 
     @GetMapping("/{id}")
     fun detalhar(@PathVariable id: Long): ReceitaResponse
+
+    @GetMapping("/{ano}/{mes}")
+    fun listarPorMes(
+        pageable: Pageable,
+        @PathVariable @Min(2022) ano: Int,
+        @PathVariable @Min(1) @Max(12) mes: Int,
+    ): Page<ReceitaResponse>
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
