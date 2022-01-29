@@ -35,6 +35,8 @@ class GeneralBeans {
 
     fun getFreela(mes: YearMonth) = Receita("Freela", 1200.00.toBigDecimal(), mes)
 
+    fun getReceitaAluguel(mes: YearMonth) = Receita("Aluguel", 900.00.toBigDecimal(), mes)
+
     fun getInvestimentos(mes: YearMonth) = Receita("Investimentos", 1500.00.toBigDecimal(), mes)
 
     fun getConveio(mes: YearMonth) =
