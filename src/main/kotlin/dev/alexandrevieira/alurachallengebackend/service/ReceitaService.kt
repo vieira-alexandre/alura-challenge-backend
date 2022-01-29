@@ -25,7 +25,9 @@ class ReceitaService(
     }
 
     fun detalhar(id: Long): Receita {
-        return repository.findById(id).orElseThrow { throw NotFoundException(Receita::class) }
+        return repository.findById(id).orElseThrow {
+            throw NotFoundException(Receita::class)
+        }
     }
 
     fun listarPorMes(pageable: Pageable, mes: YearMonth): Page<Receita> {
@@ -33,15 +35,21 @@ class ReceitaService(
     }
 
     fun excluir(id: Long) {
-        if (repository.existsById(id)) repository.deleteById(id)
-        else throw NotFoundException(Receita::class)
+        if (repository.existsById(id))
+            repository.deleteById(id)
+        else
+            throw NotFoundException(Receita::class)
     }
 
     fun atualizar(id: Long, request: Receita) {
         val receitaOptional: Optional<Receita> = repository.findById(id)
-        if (receitaOptional.isEmpty) throw NotFoundException(Receita::class)
+
+        if (receitaOptional.isEmpty)
+            throw NotFoundException(Receita::class)
+
         val carregada: Receita = receitaOptional.get()
 
+        //se estiver alterando o mes/descrição do elemento para o mês/descrição de outro já existente
         if (estaAlterando(carregada, request) && repository.existsByDescricaoAndMes(request.descricao, request.mes))
             throw UnprocessableEntityException(Mensagens.receitaJaCadastrada)
 

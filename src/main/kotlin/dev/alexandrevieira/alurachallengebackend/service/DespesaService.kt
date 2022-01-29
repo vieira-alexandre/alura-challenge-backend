@@ -25,7 +25,9 @@ class DespesaService(
     }
 
     fun detalhar(id: Long): Despesa {
-        return repository.findById(id).orElseThrow { throw NotFoundException(Despesa::class) }
+        return repository.findById(id).orElseThrow {
+            throw NotFoundException(Despesa::class)
+        }
     }
 
     fun listarPorMes(pageable: Pageable, mes: YearMonth): Page<Despesa> {
@@ -33,15 +35,21 @@ class DespesaService(
     }
 
     fun excluir(id: Long) {
-        if (repository.existsById(id)) repository.deleteById(id)
-        else throw NotFoundException(Despesa::class)
+        if (repository.existsById(id))
+            repository.deleteById(id)
+        else
+            throw NotFoundException(Despesa::class)
     }
 
     fun atualizar(id: Long, request: Despesa) {
         val despesaOptional: Optional<Despesa> = repository.findById(id)
-        if (despesaOptional.isEmpty) throw NotFoundException(Despesa::class)
+
+        if (despesaOptional.isEmpty)
+            throw NotFoundException(Despesa::class)
+
         val carregada: Despesa = despesaOptional.get()
 
+        //se estiver alterando o mes/descrição do elemento para o mês/descrição de outro já existente
         if (estaAlterando(carregada, request) && repository.existsByDescricaoAndMes(request.descricao, request.mes))
             throw UnprocessableEntityException(Mensagens.despesaJaCadastrada)
 

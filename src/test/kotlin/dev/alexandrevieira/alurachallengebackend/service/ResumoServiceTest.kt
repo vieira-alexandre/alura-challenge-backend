@@ -20,11 +20,11 @@ internal class ResumoServiceTest : GeneralBeans() {
     }
 
     @Test
-    fun resumoMensal() {
+    fun `deve retornar o resumo mensal`() {
         // mês 1
         val mes1 = YearMonth.of(2022, 1)
         val receitas1: List<Receita> = setupReceitas(getSalario(mes1), getFreela(mes1), getInvestimentos(mes1))
-        val despesas1: List<Despesa> = setupDespesas(getConveio(mes1), getCombustivel(mes1))
+        val despesas1: List<Despesa> = setupDespesas(getConvenio(mes1), getCombustivel(mes1))
         val totalReceitas1: BigDecimal = receitas1.sumOf { it.valor }.setScale(2)
         val totalDespesas1: BigDecimal = despesas1.sumOf { it.valor }.setScale(2)
         val saldoMes1 = (receitas1.sumOf { it.valor } - despesas1.sumOf { it.valor }).setScale(2)
@@ -37,7 +37,7 @@ internal class ResumoServiceTest : GeneralBeans() {
         val mes2 = YearMonth.of(2022, 2)
         val receitas2: List<Receita> = setupReceitas(getSalario(mes2), getInvestimentos(mes2))
         val despesas2: List<Despesa> =
-            setupDespesas(getCasa(mes2), getEnergia(mes2), getConveio(mes2), getCombustivel(mes2), getSeguroAuto(mes2))
+            setupDespesas(getCasa(mes2), getEnergia(mes2), getConvenio(mes2), getCombustivel(mes2), getSeguroAuto(mes2))
         val totalReceitas2: BigDecimal = receitas2.sumOf { it.valor }.setScale(2)
         val totalDespesas2: BigDecimal = despesas2.sumOf { it.valor }.setScale(2)
         val saldoMes2 = (receitas2.sumOf { it.valor } - despesas2.sumOf { it.valor }).setScale(2)
