@@ -14,4 +14,6 @@ interface DespesaRepository : JpaRepository<Despesa, Long> {
     fun findByDescricaoContainingIgnoreCase(pageable: Pageable, descricao: String): Page<Despesa>
 
     fun findByMes(pageable: Pageable, mes: YearMonth): Page<Despesa>
+
+    fun findByMes(mes: YearMonth): List<Despesa>
 }
