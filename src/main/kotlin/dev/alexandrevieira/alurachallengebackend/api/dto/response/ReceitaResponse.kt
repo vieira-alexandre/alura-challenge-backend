@@ -1,5 +1,6 @@
 package dev.alexandrevieira.alurachallengebackend.api.dto.response
 
+import com.fasterxml.jackson.annotation.JsonFormat
 import dev.alexandrevieira.alurachallengebackend.model.entities.Receita
 import org.springframework.util.Assert
 import java.math.BigDecimal
@@ -9,6 +10,7 @@ data class ReceitaResponse(
     val id: Long,
     val descricao: String,
     val valor: BigDecimal,
+    @field:JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "MM-yyyy")
     val mes: YearMonth,
 ) {
     companion object {
