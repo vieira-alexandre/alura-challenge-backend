@@ -1,11 +1,10 @@
 package dev.alexandrevieira.alurachallengebackend.api.controllers
 
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.databind.PropertyNamingStrategies
 import dev.alexandrevieira.alurachallengebackend.BaseControllerTest
 import dev.alexandrevieira.alurachallengebackend.api.dto.response.ResumoResponse
 import dev.alexandrevieira.alurachallengebackend.model.enums.Categoria
 import dev.alexandrevieira.alurachallengebackend.service.ResumoService
+import dev.alexandrevieira.alurachallengebackend.util.toJson
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito
 import org.springframework.beans.factory.annotation.Autowired
@@ -30,9 +29,7 @@ internal class ResumoControllerTest : BaseControllerTest() {
             .`when`(service.resumoMensal(YearMonth.of(ano, mes)))
             .thenReturn(getResumo())
 
-        val jsonString = ObjectMapper()
-            .setPropertyNamingStrategy(PropertyNamingStrategies.SNAKE_CASE)
-            .writeValueAsString(getResumo())
+        val jsonString = getResumo().toJson()
 
         mockMvc.perform(
             MockMvcRequestBuilders.get("/resumo/$ano/$mes")
