@@ -3,7 +3,6 @@ package dev.alexandrevieira.alurachallengebackend.api.controllers
 import dev.alexandrevieira.alurachallengebackend.api.ReceitaApi
 import dev.alexandrevieira.alurachallengebackend.api.dto.request.NovaReceitaRequest
 import dev.alexandrevieira.alurachallengebackend.api.dto.response.ReceitaResponse
-import dev.alexandrevieira.alurachallengebackend.exception.BadRequestException
 import dev.alexandrevieira.alurachallengebackend.model.entities.Receita
 import dev.alexandrevieira.alurachallengebackend.service.ReceitaService
 import org.springframework.data.domain.Page
@@ -11,7 +10,6 @@ import org.springframework.data.domain.Pageable
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder
-import java.time.DateTimeException
 import java.time.YearMonth
 
 @RestController
@@ -39,14 +37,8 @@ class ReceitaController(
     }
 
     override fun listarPorMes(pageable: Pageable, ano: Int, mes: Int): Page<ReceitaResponse> {
-        try {
-            val anoMes = YearMonth.of(ano, mes)
-            return service.listarPorMes(pageable, anoMes).map { ReceitaResponse.of(it) }
-        } catch (ex: DateTimeException) {
-            throw BadRequestException("Ano deve ser maior ou igual que 2022 e menor ou igual que 2100")
-        } catch (ex: Exception) {
-            throw ex
-        }
+        val anoMes = YearMonth.of(ano, mes)
+        return service.listarPorMes(pageable, anoMes).map { ReceitaResponse.of(it) }
     }
 
     override fun excluir(id: Long) {

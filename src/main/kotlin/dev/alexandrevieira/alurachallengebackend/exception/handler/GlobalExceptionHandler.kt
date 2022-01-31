@@ -1,6 +1,5 @@
 package dev.alexandrevieira.alurachallengebackend.exception.handler
 
-import dev.alexandrevieira.alurachallengebackend.exception.BadRequestException
 import dev.alexandrevieira.alurachallengebackend.exception.NotFoundException
 import dev.alexandrevieira.alurachallengebackend.exception.UnprocessableEntityException
 import org.springframework.beans.factory.annotation.Autowired
@@ -11,7 +10,6 @@ import org.springframework.validation.BindException
 import org.springframework.validation.FieldError
 import org.springframework.validation.ObjectError
 import org.springframework.web.bind.MethodArgumentNotValidException
-import org.springframework.web.bind.MissingRequestHeaderException
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.annotation.RestControllerAdvice
@@ -26,31 +24,13 @@ class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MethodArgumentNotValidException::class)
     fun handleMethodArgumentNotValidException(ex: MethodArgumentNotValidException): ErrorsOutputDto {
-        val globalErrors = ex.bindingResult.globalErrors
-        val fieldErrors = ex.bindingResult.fieldErrors
-        return buildValidationErrors(globalErrors, fieldErrors)
-    }
-
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(MissingRequestHeaderException::class)
-    fun handleMissingRequestHeaderException(ex: MissingRequestHeaderException): ErrorsOutputDto {
-        val error = ErrorsOutputDto(HttpStatus.BAD_REQUEST)
-        error.addFieldError(ex.headerName, "Header is required")
-        return error
+        return buildValidationErrors(ex.bindingResult.globalErrors, ex.bindingResult.fieldErrors)
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(BindException::class)
     fun handleBindException(ex: BindException): ErrorsOutputDto {
-        val globalErrors = ex.bindingResult.globalErrors
-        val fieldErrors = ex.bindingResult.fieldErrors
-        return buildValidationErrors(globalErrors, fieldErrors)
-    }
-
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(BadRequestException::class)
-    fun handleBadRequestException(ex: BadRequestException): ErrorsOutputDto {
-        return ErrorsOutputDto(HttpStatus.BAD_REQUEST, ex.localizedMessage)
+        return buildValidationErrors(ex.bindingResult.globalErrors, ex.bindingResult.fieldErrors)
     }
 
     @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
@@ -62,12 +42,9 @@ class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
     @ExceptionHandler(ConstraintViolationException::class)
     fun handleConstraintViolationException(ex: ConstraintViolationException): ErrorsOutputDto {
-        return ErrorsOutputDto(HttpStatus.UNPROCESSABLE_ENTITY).let { it ->
-            ex.constraintViolations.forEach { violation ->
-                it.addError(violation.message)
-            }
-
-            it
+        return ErrorsOutputDto(HttpStatus.UNPROCESSABLE_ENTITY).let { output ->
+            ex.constraintViolations.forEach { violation -> output.addError(violation.message) }
+            output
         }
     }
 
@@ -83,9 +60,7 @@ class GlobalExceptionHandler {
     ): ErrorsOutputDto {
         val validationErrors = ErrorsOutputDto(HttpStatus.BAD_REQUEST)
         globalErrors.forEach(Consumer { error: ObjectError ->
-            validationErrors.addError(
-                getErrorMessage(error)
-            )
+            validationErrors.addError(getErrorMessage(error))
         })
         fieldErrors.forEach(Consumer { error: FieldError ->
             val errorMessage = getErrorMessage(error)
